@@ -8,6 +8,7 @@ const nextConfig = {
     esServiceUrl: process.env.ES_SERVICE_URL,
     msToolbertUrl: process.env.MS_TOOLBERT_URL,
     msGenUrl: process.env.MS_GEN_URL,
+    internalIP: process.env.INTERNAL_IP,
   },
 
 
