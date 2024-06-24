@@ -1,0 +1,45 @@
+### Upload file
+POST http://localhost:8001/upload/
+Content-Type: multipart/form-data
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="testfile.txt"
+Content-Type: text/plain
+
+This is a test file.
+--boundary--
+
+### List files
+GET http://localhost:8001/files/
+
+### Download file
+GET http://localhost:8001/download/testfile.txt
+
+### Delete file
+DELETE http://localhost:8001/delete/testfile.txt
+
+### Upload another file with the same name
+POST http://localhost:8001/upload/
+Content-Type: multipart/form-data
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="testfile.txt"
+Content-Type: text/plain
+
+This is another test file.
+--boundary--
+
+### List files again
+GET http://localhost:8001/files/
+
+### Download the second file
+GET http://localhost:8001/download/testfile_1.txt
+
+### Delete the second file
+DELETE http://localhost:8001/delete/testfile_1.txt
+
+### List files again
+GET http://localhost:8001/files/
+
+### List files filtered by .txt
+GET http://localhost:8000/files/?filterString=.txt

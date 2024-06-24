@@ -1,0 +1,58 @@
+### Upload file
+POST http://localhost:8000/upload/
+Content-Type: multipart/form-data
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="testfile.txt"
+Content-Type: text/plain
+
+This is a test file.
+--boundary--
+
+### Upload another file
+POST http://localhost:8000/upload/
+Content-Type: multipart/form-data
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="anotherfile.txt"
+Content-Type: text/plain
+
+This is another test file.
+--boundary--
+
+### List all files
+GET http://localhost:8000/files/
+
+### Search for a specific term in files
+GET http://localhost:8080/search/?query=Российской Федерации
+
+### Download file
+GET http://localhost:8000/download/testfile.txt
+
+### Download another file
+GET http://localhost:8000/download/anotherfile.txt
+
+### Delete file
+DELETE http://localhost:8000/delete/testfile.txt
+
+### Delete another file
+DELETE http://localhost:8000/delete/anotherfile.txt
+
+### List all files after deletion
+GET http://localhost:8000/files/
+
+
+### List files filtered by .txt
+GET http://localhost:8000/files/?filterString=.docx
+
+
+### Delete all documents from Elasticsearch
+DELETE http://localhost:8080/delete_all/
+
+###
+POST http://localhost:8080/search
+Content-Type: application/json
+
+{
+  "search_string": "ДОГОВОР КУПЛИ"
+}

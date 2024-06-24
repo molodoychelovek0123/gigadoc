@@ -1,0 +1,73 @@
+{
+    "dataset_reader": {
+        "class_name": "squad_dataset_reader",
+        "data_path": "{DOWNLOADS_PATH}/squad/"
+    },
+    "dataset_iterator": {
+        "class_name": "squad_iterator",
+        "seed": 42,
+        "shuffle": true
+    },
+    "chainer": {
+        "in": ["context_raw", "question_raw"],
+        "in_y": ["ans_raw"],
+        "pipe": [
+            {
+                "class_name": "bert_preprocessor",
+                "vocab_file": "{DOWNLOADS_PATH}/bert_models/rubert_cased_L-12_H-768_A-12/vocab.txt",
+                "do_lower_case": false,
+                "max_seq_length": 512,
+                "in": ["x"],
+                "out": ["bert_input"]
+            },
+            {
+                "class_name": "bert_squad",
+                "keep_prob": 0.5,
+                "n_best_size": 20,
+                "max_answer_length": 30,
+                "return_start_end": true,
+                "bert_config_file": "{DOWNLOADS_PATH}/bert_models/rubert_cased_L-12_H-768_A-12/bert_config.json",
+                "pretrained_bert": "{DOWNLOADS_PATH}/bert_models/rubert_cased_L-12_H-768_A-12/bert_model.ckpt",
+                "vocab_file": "{DOWNLOADS_PATH}/bert_models/rubert_cased_L-12_H-768_A-12/vocab.txt",
+                "do_lower_case": false,
+                "in": ["bert_input"],
+                "out": ["start_logits", "end_logits"]
+            },
+            {
+                "class_name": "squad_bert_postprocessor",
+                "vocab_file": "{DOWNLOADS_PATH}/bert_models/rubert_cased_L-12_H-768_A-12/vocab.txt",
+                "do_lower_case": false,
+                "n_best_size": 20,
+                "max_answer_length": 30,
+                "in": ["start_logits", "end_logits", "bert_input"],
+                "out": ["ans"]
+            }
+        ],
+        "out": ["ans"]
+    },
+    "train": {
+        "batch_size": 12,
+        "metrics": [
+            {
+                "name": "squad_metrics",
+                "inputs": ["ans", "ans_raw"]
+            }
+        ],
+        "validation_patience": 5,
+        "val_every_n_epochs": 1,
+        "log_every_n_batches": 100,
+        "evaluation_targets": [
+            "valid"
+        ],
+        "class_name": "nn_trainer",
+        "optimizer": "Adam",
+        "learning_rate": 2e-05,
+        "weight_decay": 0.01,
+        "lr_scheduler": {
+            "class_name": "transformer_warmup",
+            "warmup_steps": 1000,
+            "warmup_proportion": 0.1
+        },
+        "epochs": 5
+    }
+}
