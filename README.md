@@ -1,40 +1,76 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Проект: Автоматизация формирования юридических документов
 
-## Getting Started
+## Описание
 
-First, run the development server:
+Этот проект представляет собой систему автоматизации формирования юридических документов с использованием современных веб-технологий и искусственных нейронных сетей. Проект состоит из нескольких микросервисов, каждый из которых отвечает за определенные функции, что обеспечивает гибкость, масштабируемость и производительность системы.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Фронтенд
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Стек технологий
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+- **Next.js**: Фреймворк для React, который позволяет создавать серверно-рендерируемые приложения и статические веб-сайты с отличной производительностью и удобством разработки.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### Функционал
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Фронтенд отвечает за взаимодействие с пользователем, предоставляя удобный и интуитивно понятный интерфейс для создания, редактирования и управления юридическими документами.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Микросервисы
 
-## Learn More
+### Общая структура
 
-To learn more about Next.js, take a look at the following resources:
+| Название МС   | Стек технологий                | Описание                                                                                                   |
+|---------------|--------------------------------|------------------------------------------------------------------------------------------------------------|
+| docxPress     | Express.js                     | Конвертация docx в HTML Nodes. Вынесен из next.js из-за высокой нагрузки на клиентский UI при построении DOM. |
+| S3_service    | FastApi                        | Управление файлами (загрузка, скачивание, удаление) в системе.                                             |
+| ES_service    | FastApi, ElasticSearch         | Расширяет функционал S3_service, добавляя интеграцию с ElasticSearch для индексирования и быстрого поиска файлов. |
+| MS_report     | FastApi, Pandas                | Обработка файлов Excel и генерация отчетов в формате DOCX на основе заданных схем.                         |
+| MS_toolBERT   | FastApi, deepPavlov, HF Transformers | Работа с моделью BERT для анализа семантической близости и выдачи четких ответов на основе контекста.         |
+| MS_gen        | FastApi, HF Transformers, GigaChat | Интеграция с генеративными ИИ моделями для обработки запросов.                                              |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Описание микросервисов
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+1. **docxPress**
+    - **Стек технологий**: Express.js
+    - **Описание**: Микросервис для конвертации документов формата docx в HTML Nodes. Вынесен из Next.js для снижения нагрузки на клиентский UI при построении Virtual DOM из docx документа.
 
-## Deploy on Vercel
+2. **S3_service**
+    - **Стек технологий**: FastApi
+    - **Описание**: Управляет файлами, хранящимися в системе. Обеспечивает функции загрузки, скачивания и удаления файлов.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. **ES_service**
+    - **Стек технологий**: FastApi, ElasticSearch
+    - **Описание**: Расширяет функционал S3_service, добавляя интеграцию с ElasticSearch для индексирования файлов и выполнения быстрого поиска.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+4. **MS_report**
+    - **Стек технологий**: FastApi, Pandas
+    - **Описание**: Отвечает за обработку файлов Excel и генерацию отчетов в формате DOCX на основе заданных схем.
+
+5. **MS_toolBERT**
+    - **Стек технологий**: FastApi, deepPavlov, HF Transformers
+    - **Описание**: Работает с моделью BERT для анализа семантической близости и выдачи четких ответов на основе контекста.
+
+6. **MS_gen**
+    - **Стек технологий**: FastApi, HF Transformers, GigaChat
+    - **Описание**: Интеграция с генеративными ИИ моделями для обработки запросов.
+
+## Установка и запуск
+
+### Требования
+
+- Node.js
+- Python 3.8+
+- Docker
+- Docker Compose
+
+## Планы по дальнейшему развитию
+
+- Добавление статического анализа текста.
+- Улучшение точности и надежности генерации текста.
+- Интеграция с другими сервисами.
+- Разработка мобильной версии редактора.
+- Введение функции совместного редактирования документов в реальном времени.
+- Внедрение технологии оптического распознавания символов (OCR) для чтения текста из сканированных документов.
+
+## Контакты
+
+Если у вас есть вопросы или предложения, пожалуйста, свяжитесь с нами по электронной почте: [boxdeveloper@studiobox.dev](mailto:boxdeveloper@studiobox.dev).
